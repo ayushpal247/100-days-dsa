@@ -1,0 +1,19 @@
+#include <stdio.h>
+#include <string.h>
+
+int isPalindrome(char *str, int left, int right) {
+    if (left >= right) return 1;
+    if (str[left] != str[right]) return 0;
+    return isPalindrome(str, left + 1, right - 1);
+}
+
+int main() {
+    char str[1000];
+    scanf("%s", str);
+    int n = strlen(str);
+    if (isPalindrome(str, 0, n - 1))
+        printf("YES\n");
+    else
+        printf("NO\n");
+    return 0;
+}
