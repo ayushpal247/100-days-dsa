@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* createNode(int val) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = val;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void append(struct Node** head, int val) {
+    struct Node* newNode = createNode(val);
+    if (*head == NULL) {
+        *head = newNode;
+        return;
+    }
+    struct Node* temp = *head;
+    while (temp->next != NULL) temp = temp->next;
+    temp->next = newNode;
+}
+
+struct Node* mergeLists(struct Node* l1, struct Node* l2) {
+    struct Node dummy;
+    struct Node* tail = &dummy;
+    dummy.next = NULL;
+
+    while (l1 != NULL && l2 != NULL) {
+        if (l1->data <= l2->data) {
+            tail->next = l1;
+            l1 = l1->next;
+        } else {
+            tail->next = l2;
+            l2 = l2->next;
+        }
+        tail = tail->next;
+    }
+
+    if (l1 != NULL) tail->next = l1;
+    else tail->next = l2;
+
+    return dummy.next;
+}
+
+void display(struct Node* head) {
+    while (head != NULL) {
+        printf("%d%s", head->data, (head->next == NULL) ? "" : " ");
+        head = head->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    int n, m, val;
+    struct Node *list1 = NULL, *list2 = NULL;
+
+    if (scanf("%d", &n) == 1) {
+        for (int i = 0; i < n; i++) {
+            scanf("%d", &val);
+            append(&list1, val);
+        }
+    }
+
+    if (scanf("%d", &m) == 1) {
+        for (int i = 0; i < m; i++) {
+            scanf("%d", &val);
+            append(&list2, val);
+        }
+    }
+
+    struct Node* mergedHead = mergeLists(list1, list2);
+    display(mergedHead);
+
+    return 0;
+}
