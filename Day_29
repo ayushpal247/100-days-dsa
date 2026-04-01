@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* rotate(struct Node* head, int k, int n) {
+    if (!head || k == 0) return head;
+
+    struct Node* temp = head;
+    // 1. Find the current tail
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+
+    // 2. Connect tail to head to make it circular
+    temp->next = head;
+
+    // 3. Find the new tail: (n - k)th node
+    int stepsToNewTail = n - k;
+    struct Node* newTail = head;
+    for (int i = 1; i < stepsToNewTail; i++) {
+        newTail = newTail->next;
+    }
+
+    // 4. Set new head and break the circle
+    struct Node* newHead = newTail->next;
+    newTail->next = NULL;
+
+    return newHead;
+}
+
+int main() {
+    int n, k, val;
+    struct Node *head = NULL, *tail = NULL;
+
+    if (scanf("%d", &n) != 1 || n <= 0) return 0;
+
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &val);
+        struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+        newNode->data = val;
+        newNode->next = NULL;
+        if (head == NULL) {
+            head = newNode;
+            tail = newNode;
+        } else {
+            tail->next = newNode;
+            tail = newNode;
+        }
+    }
+
+    scanf("%d", &k);
+    k = k % n; 
+
+    if (k > 0) {
+        head = rotate(head, k, n);
+    }
+
+    struct Node* curr = head;
+    while (curr != NULL) {
+        printf("%d%s", curr->data, curr->next ? " " : "");
+        curr = curr->next;
+    }
+    printf("\n");
+
+    return 0;
+}
